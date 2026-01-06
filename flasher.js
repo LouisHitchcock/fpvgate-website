@@ -253,7 +253,7 @@ function generateManifest() {
     const boardConfig = BOARD_CONFIGS[selectedBoard];
     const version = selectedVersion.tag_name;
     
-    // Get board-specific prefix for asset names in GitHub release
+    // Get board-specific prefix for asset names
     const boardPrefixes = {
         'esp32s3': 'ESP32S3-8MB',
         'esp32s3supermini': 'ESP32S3-SuperMini-4MB',
@@ -264,17 +264,14 @@ function generateManifest() {
     
     const boardPrefix = boardPrefixes[selectedBoard];
     
-    // Map parts to GitHub release assets
+    // Use local firmware files hosted on the website (avoids CORS issues)
+    const baseUrl = new URL(window.location.href);
+    const firmwareBaseUrl = new URL(`firmware/${version}/boards/${boardPrefix}/`, baseUrl).href;
+    
+    // Map parts to local firmware URLs
     const parts = boardConfig.parts.map(part => {
-        const assetName = `${boardPrefix}-${part.path}`;
-        const asset = selectedVersion.assets.find(a => a.name === assetName);
-        
-        if (!asset) {
-            throw new Error(`Asset not found: ${assetName}`);
-        }
-        
         return {
-            path: asset.browser_download_url,
+            path: `${firmwareBaseUrl}${part.path}`,
             offset: part.offset
         };
     });
