@@ -26,22 +26,15 @@ jobs:
           # Get latest release info
           RELEASE_DATA=$(curl -s https://api.github.com/repos/LouisHitchcock/FPVGate/releases/latest)
           
-          # Extract version and download URLs
+          # Extract version
           VERSION=$(echo "$RELEASE_DATA" | jq -r '.tag_name')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           
-          # Get asset download URLs
-          BOOTLOADER_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name=="bootloader.bin") | .browser_download_url')
-          PARTITIONS_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name=="partitions.bin") | .browser_download_url')
-          FIRMWARE_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name=="firmware.bin") | .browser_download_url')
-          LITTLEFS_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name=="littlefs.bin") | .browser_download_url')
-          
-          echo "bootloader_url=$BOOTLOADER_URL" >> $GITHUB_OUTPUT
-          echo "partitions_url=$PARTITIONS_URL" >> $GITHUB_OUTPUT
-          echo "firmware_url=$FIRMWARE_URL" >> $GITHUB_OUTPUT
-          echo "littlefs_url=$LITTLEFS_URL" >> $GITHUB_OUTPUT
-          
           echo "Found release: $VERSION"
+          
+          # Save all assets for later processing
+          echo "$RELEASE_DATA" | jq -r '.assets[] | "\(.name)|\(.browser_download_url)"' > /tmp/assets.txt
+          cat /tmp/assets.txt
       
       - name: Check if version already exists
         id: check_version
@@ -59,23 +52,36 @@ jobs:
         if: steps.check_version.outputs.exists == 'false'
         run: |
           VERSION="${{ steps.get_release.outputs.version }}"
-          mkdir -p "firmware/$VERSION"
+          mkdir -p "firmware/$VERSION/boards"
           
-          # Download each binary
-          echo "Downloading bootloader.bin..."
-          curl -L -o "firmware/$VERSION/bootloader.bin" "${{ steps.get_release.outputs.bootloader_url }}"
+          # Board configurations with their prefixes
+          BOARDS=("ESP32S3-8MB" "ESP32S3-SuperMini-4MB" "LilyGO-T-Energy-S3" "ESP32C3")
           
-          echo "Downloading partitions.bin..."
-          curl -L -o "firmware/$VERSION/partitions.bin" "${{ steps.get_release.outputs.partitions_url }}"
+          # Download board-specific binaries
+          for BOARD in "${BOARDS[@]}"; do
+            echo "Downloading binaries for $BOARD..."
+            mkdir -p "firmware/$VERSION/boards/$BOARD"
+            
+            # Download each binary type
+            while IFS='|' read -r NAME URL; do
+              if [[ "$NAME" == "$BOARD-"* ]]; then
+                FILENAME=$(echo "$NAME" | sed "s/${BOARD}-//")
+                echo "  Downloading $FILENAME..."
+                curl -L -o "firmware/$VERSION/boards/$BOARD/$FILENAME" "$URL"
+              fi
+            done < /tmp/assets.txt
+          done
           
-          echo "Downloading firmware.bin..."
-          curl -L -o "firmware/$VERSION/firmware.bin" "${{ steps.get_release.outputs.firmware_url }}"
-          
-          echo "Downloading littlefs.bin..."
-          curl -L -o "firmware/$VERSION/littlefs.bin" "${{ steps.get_release.outputs.littlefs_url }}"
+          # Also download README and sd_card_contents if present
+          while IFS='|' read -r NAME URL; do
+            if [[ "$NAME" == "README.txt" ]] || [[ "$NAME" == "sd_card_contents.zip" ]]; then
+              echo "Downloading $NAME..."
+              curl -L -o "firmware/$VERSION/$NAME" "$URL"
+            fi
+          done < /tmp/assets.txt
           
           echo "Downloaded all binaries for $VERSION"
-          ls -lh "firmware/$VERSION"
+          find "firmware/$VERSION" -type f -exec ls -lh {} \;
       
       - name: Update latest symlink
         if: steps.check_version.outputs.exists == 'false'
