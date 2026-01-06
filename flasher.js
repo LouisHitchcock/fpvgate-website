@@ -3,6 +3,9 @@ const GITHUB_API = 'https://api.github.com/repos/LouisHitchcock/FPVGate/releases
 const GITHUB_RELEASE_BASE = 'https://github.com/LouisHitchcock/FPVGate/releases/download';
 const BOARDS_CONFIG_URL = 'https://raw.githubusercontent.com/LouisHitchcock/FPVGate/main/boards.json';
 
+// GitHub object storage base - supports CORS
+const GITHUB_OBJECTS_BASE = 'https://objects.githubusercontent.com/github-production-release-asset-2e65be';
+
 // Board configurations
 const BOARD_CONFIGS = {
     esp32s3: {
@@ -266,6 +269,23 @@ function generateManifest() {
     const boardConfig = BOARD_CONFIGS[selectedBoard];
     const version = selectedVersion.tag_name;
     
+    // Get asset URLs from the selected release
+    const parts = boardConfig.parts.map(part => {
+        const asset = selectedVersion.assets.find(a => a.name === part.path);
+        if (!asset) {
+            console.warn(`Asset not found: ${part.path}`);
+            return {
+                path: `${GITHUB_RELEASE_BASE}/${version}/${part.path}`,
+                offset: part.offset
+            };
+        }
+        // Use browser_download_url which should work with CORS
+        return {
+            path: asset.browser_download_url,
+            offset: part.offset
+        };
+    });
+    
     // Build the manifest object
     const manifest = {
         name: `FPVGate ${version}`,
@@ -275,10 +295,7 @@ function generateManifest() {
         builds: [
             {
                 chipFamily: boardConfig.chipFamily,
-                parts: boardConfig.parts.map(part => ({
-                    path: `${GITHUB_RELEASE_BASE}/${version}/${part.path}`,
-                    offset: part.offset
-                }))
+                parts: parts
             }
         ]
     };
