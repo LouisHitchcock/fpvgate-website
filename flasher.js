@@ -236,10 +236,15 @@ async function prepareFlashButton() {
     flashSection.style.display = 'none';
     
     try {
-        const manifest = await generateManifest();
+        const manifest = generateManifest();
         
-        // Set manifest on the install button
-        installButton.manifest = manifest;
+        // Convert manifest object to JSON string and create data URL
+        const manifestJson = JSON.stringify(manifest, null, 2);
+        const manifestBlob = new Blob([manifestJson], { type: 'application/json' });
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        
+        // Set manifest URL on the install button
+        installButton.manifest = manifestUrl;
         
         loadingSection.style.display = 'none';
         flashSection.style.display = 'block';
@@ -252,7 +257,7 @@ async function prepareFlashButton() {
 }
 
 // Generate ESP Web Tools manifest
-async function generateManifest() {
+function generateManifest() {
     const boardConfig = BOARD_CONFIGS[selectedBoard];
     const version = selectedVersion.tag_name;
     
@@ -273,7 +278,7 @@ async function generateManifest() {
         ]
     };
     
-    return JSON.stringify(manifest);
+    return manifest;
 }
 
 // Show error message
