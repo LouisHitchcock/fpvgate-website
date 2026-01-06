@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPVGate Web Flasher</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>🏁 FPVGate</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="flasher.html" class="btn-primary">Flash Firmware</a>
+                <a href="https://github.com/LouisHitchcock/FPVGate" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="flasher-section">
+        <div class="container">
+            <h1>FPVGate Web Flasher</h1>
+            <p class="subtitle">Flash FPVGate firmware directly from your browser - no command line required!</p>
+
+            <div class="alert alert-info">
+                <strong>Requirements:</strong> Chrome, Edge, or Opera browser. Connect your ESP32-S3 via USB.
+            </div>
+
+            <div class="flasher-container">
+                <div class="flasher-config">
+                    <div class="form-group">
+                        <label for="board-select">Select Your Board:</label>
+                        <select id="board-select" class="form-control">
+                            <option value="">Choose your ESP32-S3 board...</option>
+                            <option value="esp32s3">ESP32-S3 DevKitC-1 (8MB Flash) - Recommended</option>
+                            <option value="esp32s3supermini">ESP32-S3 Super Mini (4MB Flash)</option>
+                        </select>
+                        <small>Not sure? Check the <a href="https://github.com/LouisHitchcock/FPVGate/blob/main/docs/HARDWARE_GUIDE.md" target="_blank">Hardware Guide</a></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="version-select">Select Firmware Version:</label>
+                        <select id="version-select" class="form-control">
+                            <option value="">Loading versions...</option>
+                        </select>
+                        <small id="version-info" class="version-info"></small>
+                    </div>
+
+                    <div id="flash-section" style="display: none;">
+                        <div class="flash-info">
+                            <h3>Ready to Flash</h3>
+                            <p id="flash-description"></p>
+                            <div class="flash-details">
+                                <p><strong>Board:</strong> <span id="selected-board"></span></p>
+                                <p><strong>Version:</strong> <span id="selected-version"></span></p>
+                            </div>
+                        </div>
+
+                        <div class="flash-button-container">
+                            <esp-web-install-button id="install-button">
+                                <button slot="activate" class="btn btn-large btn-primary">
+                                    Connect & Flash Device
+                                </button>
+                            </esp-web-install-button>
+                        </div>
+                    </div>
+
+                    <div id="loading-section" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Preparing firmware...</p>
+                    </div>
+
+                    <div id="error-section" class="alert alert-error" style="display: none;">
+                        <strong>Error:</strong> <span id="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="flasher-instructions">
+                    <h3>Instructions</h3>
+                    <ol>
+                        <li>Select your ESP32-S3 board type from the dropdown</li>
+                        <li>Choose the firmware version you want to install</li>
+                        <li>Click "Connect & Flash Device"</li>
+                        <li>Select your device's COM port when prompted</li>
+                        <li>Wait for the flashing process to complete (2-3 minutes)</li>
+                        <li>Done! Your device will reboot automatically</li>
+                    </ol>
+
+                    <div class="alert alert-warning">
+                        <strong>First time flashing?</strong><br>
+                        You may need to hold the BOOT button on your ESP32-S3 when connecting USB to enter flash mode.
+                    </div>
+
+                    <h3>After Flashing</h3>
+                    <ol>
+                        <li>Prepare your SD card with audio files (see <a href="https://github.com/LouisHitchcock/FPVGate/releases" target="_blank">release package</a>)</li>
+                        <li>Connect to WiFi network: <strong>FPVGate_XXXX</strong></li>
+                        <li>Password: <strong>fpvgate1</strong></li>
+                        <li>Open browser to: <strong>http://www.fpvgate.xyz</strong> or <strong>http://192.168.4.1</strong></li>
+                        <li>Configure your VTx frequency and calibrate thresholds</li>
+                    </ol>
+
+                    <div class="help-links">
+                        <h4>Need Help?</h4>
+                        <ul>
+                            <li><a href="https://github.com/LouisHitchcock/FPVGate/blob/main/docs/GETTING_STARTED.md" target="_blank">Getting Started Guide</a></li>
+                            <li><a href="https://github.com/LouisHitchcock/FPVGate/blob/main/docs/HARDWARE_GUIDE.md" target="_blank">Hardware Guide</a></li>
+                            <li><a href="https://github.com/LouisHitchcock/FPVGate/issues" target="_blank">Report an Issue</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Made with care for the FPV community</p>
+            <p>Licensed under CC BY-NC-SA 4.0</p>
+        </div>
+    </footer>
+
+    <script src="flasher.js"></script>
+</body>
+</html>

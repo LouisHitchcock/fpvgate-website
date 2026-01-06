@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPVGate - Personal FPV Lap Timer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>🏁 FPVGate</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="flasher.html" class="btn-primary">Flash Firmware</a>
+                <a href="https://github.com/LouisHitchcock/FPVGate" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Personal FPV Lap Timer</h1>
+            <p class="subtitle">Compact, self-contained RSSI-based lap timing for 5.8GHz FPV drones</p>
+            <div class="hero-buttons">
+                <a href="flasher.html" class="btn btn-large btn-primary">Flash Firmware</a>
+                <a href="https://github.com/LouisHitchcock/FPVGate" class="btn btn-large btn-secondary" target="_blank">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📡</div>
+                    <h3>Dual Connectivity</h3>
+                    <p>WiFi Access Point and USB Serial CDC connection for zero-latency control</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Visual Feedback</h3>
+                    <p>RGB LED indicators with 10 customizable presets and real-time RSSI visualization</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <h3>Voice Announcements</h3>
+                    <p>Natural voice announcements with 4 included voices and phonetic name support</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Race Analysis</h3>
+                    <p>Real-time lap tracking, gap analysis, and race history with export/import</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Track Management</h3>
+                    <p>Create and manage track profiles with distance tracking and custom metadata</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>Webhooks</h3>
+                    <p>HTTP webhook support for external LED controllers and device integration</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hardware">
+        <div class="container">
+            <h2>Supported Hardware</h2>
+            <div class="hardware-grid">
+                <div class="hardware-card">
+                    <h3>ESP32-S3 DevKitC-1</h3>
+                    <p>8MB Flash - Full features</p>
+                    <span class="badge">Recommended</span>
+                </div>
+                <div class="hardware-card">
+                    <h3>ESP32-S3 Super Mini</h3>
+                    <p>4MB Flash - Compact design</p>
+                    <span class="badge">Supported</span>
+                </div>
+            </div>
+            <p class="hardware-note">
+                <strong>Required:</strong> RX5808 Module (SPI modded), MicroSD Card (FAT32), 5V Power Supply
+            </p>
+        </div>
+    </section>
+
+    <section class="bands">
+        <div class="container">
+            <h2>Supported Bands</h2>
+            <div class="bands-grid">
+                <div class="band-section">
+                    <h3>Analog FPV</h3>
+                    <ul>
+                        <li>Boscam A, B, E</li>
+                        <li>Fatshark</li>
+                        <li>RaceBand</li>
+                        <li>LowBand</li>
+                    </ul>
+                </div>
+                <div class="band-section">
+                    <h3>Digital FPV</h3>
+                    <ul>
+                        <li>DJI (v1-25, v1-50, 03/04 variants)</li>
+                        <li>HDZero (R, E, F, CE)</li>
+                        <li>WalkSnail (R, 25, 50)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="getting-started">
+        <div class="container">
+            <h2>Quick Start</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Flash Firmware</h3>
+                    <p>Use our web-based flasher to install FPVGate on your ESP32-S3 in seconds</p>
+                    <a href="flasher.html" class="btn btn-primary">Go to Flasher</a>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Prepare SD Card</h3>
+                    <p>Format SD card as FAT32 and load audio files from the release package</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Connect & Configure</h3>
+                    <p>Connect to FPVGate WiFi network and set your VTx frequency and thresholds</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Start Racing!</h3>
+                    <p>Fly through the gate and watch your lap times appear in real-time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Made with care for the FPV community</p>
+            <p>Licensed under CC BY-NC-SA 4.0</p>
+            <div class="footer-links">
+                <a href="https://github.com/LouisHitchcock/FPVGate" target="_blank">GitHub</a>
+                <a href="https://github.com/LouisHitchcock/FPVGate/issues" target="_blank">Issues</a>
+                <a href="https://github.com/LouisHitchcock/FPVGate/tree/main/docs" target="_blank">Documentation</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
