@@ -238,10 +238,15 @@ async function prepareFlashButton() {
     try {
         const manifest = generateManifest();
         
+        console.log('Generated manifest:', manifest);
+        
         // Convert manifest object to JSON string and create data URL
         const manifestJson = JSON.stringify(manifest, null, 2);
         const manifestBlob = new Blob([manifestJson], { type: 'application/json' });
         const manifestUrl = URL.createObjectURL(manifestBlob);
+        
+        console.log('Manifest URL:', manifestUrl);
+        console.log('Binary URLs:', manifest.builds[0].parts.map(p => p.path));
         
         // Set manifest URL on the install button
         installButton.manifest = manifestUrl;
@@ -251,7 +256,7 @@ async function prepareFlashButton() {
         
     } catch (error) {
         console.error('Error preparing flash:', error);
-        showError('Failed to prepare firmware. Please try again.');
+        showError(`Failed to prepare firmware: ${error.message}`);
         loadingSection.style.display = 'none';
     }
 }
