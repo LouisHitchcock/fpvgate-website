@@ -94,9 +94,9 @@ jobs:
           fi
           
           # Add this version to versions.json if not already there
-          VERSIONS=$(cat firmware/versions.json)
-          if ! echo "$VERSIONS" | jq -e ".versions[] | select(. == \"$VERSION\")" > /dev/null; then
-            echo "$VERSIONS" | jq ".versions += [\"$VERSION\"] | .versions |= sort | reverse" > firmware/versions.json
+          if ! jq -e ".versions | index(\"$VERSION\")" firmware/versions.json > /dev/null 2>&1; then
+            jq ".versions += [\"$VERSION\"] | .versions |= sort | reverse" firmware/versions.json > firmware/versions.json.tmp
+            mv firmware/versions.json.tmp firmware/versions.json
             echo "Added $VERSION to versions.json"
           fi
           
