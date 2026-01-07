@@ -266,12 +266,12 @@ function generateManifest() {
     
     // Use local firmware files hosted on the website (avoids CORS issues)
     const baseUrl = new URL(window.location.href);
-    const firmwareBaseUrl = new URL(`firmware/${version}/boards/${boardPrefix}/`, baseUrl).href;
+    const firmwareBaseUrl = new URL(`firmware/${version}/`, baseUrl).href;
     
-    // Map parts to local firmware URLs
+    // Map parts to local firmware URLs with board prefix
     const parts = boardConfig.parts.map(part => {
         return {
-            path: `${firmwareBaseUrl}${part.path}`,
+            path: `${firmwareBaseUrl}${boardPrefix}-${part.path}`,
             offset: part.offset
         };
     });
