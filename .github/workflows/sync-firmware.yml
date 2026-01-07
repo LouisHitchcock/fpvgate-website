@@ -55,25 +55,15 @@ jobs:
         if: steps.check_version.outputs.exists == 'false'
         run: |
           VERSION="${{ steps.get_release.outputs.version }}"
-          mkdir -p "firmware/$VERSION/boards"
+          mkdir -p "firmware/$VERSION"
           
-          # Board configurations with their prefixes
-          BOARDS=("ESP32S3-8MB" "ESP32S3-SuperMini-4MB" "LilyGO-T-Energy-S3" "ESP32C3")
-          
-          # Download board-specific binaries
-          for BOARD in "${BOARDS[@]}"; do
-            echo "Downloading binaries for $BOARD..."
-            mkdir -p "firmware/$VERSION/boards/$BOARD"
-            
-            # Download each binary type
-            while IFS='|' read -r NAME URL; do
-              if [[ "$NAME" == "$BOARD-"* ]]; then
-                FILENAME=$(echo "$NAME" | sed "s/${BOARD}-//")
-                echo "  Downloading $FILENAME..."
-                curl -L -o "firmware/$VERSION/boards/$BOARD/$FILENAME" "$URL"
-              fi
-            done < /tmp/assets.txt
-          done
+          # Download all .bin files from the release
+          while IFS='|' read -r NAME URL; do
+            if [[ "$NAME" == *.bin ]]; then
+              echo "Downloading $NAME..."
+              curl -L -o "firmware/$VERSION/$NAME" "$URL"
+            fi
+          done < /tmp/assets.txt
           
           # Also download README and sd_card_contents if present
           while IFS='|' read -r NAME URL; do
