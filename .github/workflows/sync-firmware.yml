@@ -95,7 +95,7 @@ jobs:
           
           # Add this version to versions.json if not already there
           if ! grep -q "$VERSION" firmware/versions.json; then
-            jq ".versions += [\"$VERSION\"] | .versions |= sort | reverse" firmware/versions.json > firmware/versions.json.tmp
+            jq ".versions += [\"$VERSION\"] | .versions = (.versions | sort | reverse)" firmware/versions.json > firmware/versions.json.tmp
             mv firmware/versions.json.tmp firmware/versions.json
             echo "Added $VERSION to versions.json"
           fi
